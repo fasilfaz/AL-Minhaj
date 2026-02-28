@@ -24,6 +24,32 @@
     });
 
     // Mobile Navigation
+    if ($(".main-menu__list").length && $(".mobile-nav__container").length) {
+        var navContent = document.querySelector(".main-menu__list").outerHTML;
+        var mobileNavContainer = document.querySelector(".mobile-nav__container");
+        mobileNavContainer.innerHTML = navContent;
+    }
+
+    if ($(".mobile-nav__container .main-menu__list").length) {
+        var dropdownAnchor = $(".mobile-nav__container .main-menu__list .dropdown > a");
+        dropdownAnchor.each(function () {
+            var self = $(this);
+            var toggleBtn = document.createElement("BUTTON");
+            toggleBtn.setAttribute("aria-label", "dropdown toggler");
+            toggleBtn.innerHTML = "<i class='fa fa-angle-down'></i>";
+            self.append(function () {
+                return toggleBtn;
+            });
+            self.find("button").on("click", function (e) {
+                e.preventDefault();
+                var button = $(this);
+                button.toggleClass("expanded");
+                button.parent().toggleClass("expanded");
+                button.parent().parent().children("ul").slideToggle();
+            });
+        });
+    }
+
     if ($('.mobile-nav__toggler').length) {
         $('.mobile-nav__toggler').on('click', function (e) {
             e.preventDefault();
@@ -63,8 +89,9 @@
         wow.init();
     }
 
-    // Initialize when document is ready
-    $(document).on('ready', function () {
+    // jQuery 3 removed the "ready" event binding via .on('ready').
+    // Run after full page load so the preloader always closes.
+    $(window).on('load', function () {
         handlePreloader();
     });
 
